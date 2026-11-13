@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CELCODA | منصتكم الرقمية الشاملة في كل مصر</title>
+    
+    <!-- Google Fonts: Cairo & Orbitron for Tech Logo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                        tech: ['Orbitron', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#070d14',
+                        darkCard: '#0c1622',
+                        darkBorder: '#16283d',
+                        neonCyan: '#00f2fe',
+                        neonGreen: '#00ff9d',
+                    },
+                    boxShadow: {
+                        'neon': '0 0 20px rgba(0, 242, 254, 0.25), 0 0 40px rgba(0, 255, 157, 0.1)',
+                        'neon-strong': '0 0 25px rgba(0, 242, 254, 0.5), 0 0 50px rgba(0, 255, 157, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #070d14;
+            color: #f1f5f9;
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Subtle Matrix/Code Grid Background */
+        .bg-grid-pattern {
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.12) 0%, transparent 55%),
+                radial-gradient(circle at 85% 40%, rgba(0, 255, 157, 0.07) 0%, transparent 45%),
+                linear-gradient(to right, rgba(0, 242, 254, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 242, 254, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        /* Neon Text & Gradient Effects */
+        .text-neon-gradient {
+            background: linear-gradient(135deg, #00f2fe 0%, #00ff9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bg-neon-gradient {
+            background: linear-gradient(135deg, #00f2fe 0%, #00ff9d 100%);
+        }
+
+        .neon-glow-text {
+            text-shadow: 0 0 18px rgba(0, 242, 254, 0.5);
+        }
+
+        /* Custom Range Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #16283d;
+            height: 8px;
+            border-radius: 999px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00f2fe, #00ff9d);
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.8);
+            border: 2px solid #070d14;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070d14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #16283d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2fe;
+        }
+
+        @keyframes pulseSlow {
+            0%, 100% { opacity: 0.85; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+        .animate-logo {
+            animation: pulseSlow 4s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-grid-pattern min-h-screen flex flex-col">
+
+    <!-- Toast Notification Container (Replaces alert) -->
+    <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 bg-[#070d14]/90 backdrop-blur-md border-b border-darkBorder">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Brand Logo (SVG recreating the exact Celcoda neon neural code emblem) -->
+                <a href="#" onclick="switchView('client')" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 relative flex items-center justify-center animate-logo">
+                        <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[0_0_8px_rgba(0,242,254,0.8)]">
+                            <defs>
+                                <linearGradient id="celcodaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00f2fe" />
+                                    <stop offset="100%" stop-color="#00ff9d" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Outer neural ring & nodes -->
+                            <circle cx="50" cy="50" r="36" fill="none" stroke="url(#celcodaGrad)" stroke-width="2.5" stroke-dasharray="14 8" />
+                            <circle cx="50" cy="50" r="28" fill="none" stroke="url(#celcodaGrad)" stroke-width="1.5" opacity="0.7" />
+                            <!-- Nodes -->
+                            <circle cx="50" cy="14" r="4" fill="#070d14" stroke="#00f2fe" stroke-width="2.5"/>
+                            <circle cx="86" cy="50" r="4" fill="#070d14" stroke="#00ff9d" stroke-width="2.5"/>
+                            <circle cx="50" cy="86" r="4" fill="#070d14" stroke="#00ff9d" stroke-width="2.5"/>
+                            <circle cx="14" cy="50" r="4" fill="#070d14" stroke="#00f2fe" stroke-width="2.5"/>
+                            <circle cx="25" cy="25" r="3.5" fill="#00f2fe"/>
+                            <circle cx="75" cy="25" r="3.5" fill="#00ff9d"/>
+                            <circle cx="75" cy="75" r="3.5" fill="#00ff9d"/>
+                            <circle cx="25" cy="75" r="3.5" fill="#00f2fe"/>
+                            <!-- Center Code Symbol {/} -->
+                            <text x="50" y="57" text-anchor="middle" fill="url(#celcodaGrad)" font-family="monospace" font-weight="bold" font-size="22">{/}</text>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="font-tech text-2xl font-black tracking-wider text-neon-gradient block leading-none">CELCODA</span>
+                        <span class="text-[11px] text-slate-400 tracking-wide">للحلول البرمجية والأنظمة</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav id="client-nav" class="hidden md:flex items-center gap-7 text-sm font-semibold">
+                    <a href="#hero" class="text-slate-300 hover:text-neonCyan transition">الرئيسية</a>
+                    <a href="#services" class="text-slate-300 hover:text-neonCyan transition">خدماتنا والمجالات</a>
+                    <a href="#order-section" class="text-slate-300 hover:text-neonCyan transition">اطلب مشروعك</a>
+                    <a href="#tracking-section" class="text-slate-300 hover:text-neonCyan transition">تتبع طلبك</a>
+                </nav>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-3">
+                    <button id="toggle-view-btn" onclick="toggleAdminView()" class="px-4 py-2 rounded-xl border border-neonCyan/40 bg-neonCyan/10 hover:bg-neonCyan/20 text-neonCyan text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-neon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span id="toggle-view-text">لوحة الإدارة</span>
+                    </button>
+                    
+                    <a href="#order-section" onclick="switchView('client')" class="hidden sm:inline-flex px-5 py-2.5 rounded-xl bg-neon-gradient text-darkBg font-extrabold text-sm hover:opacity-90 transition shadow-neon">
+                        اطلب الآن
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: CLIENT PORTAL (الواجهة الرئيسية)     -->
+    <!-- ========================================== -->
+    <main id="client-view" class="flex-grow">
+
+        <!-- 1. HERO SECTION -->
+        <section id="hero" class="relative pt-14 pb-20 lg:pt-24 lg:pb-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-4xl mx-auto">
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-darkCard border border-neonCyan/30 text-neonCyan text-xs sm:text-sm font-semibold mb-6 shadow-neon">
+                    <span class="w-2 h-2 rounded-full bg-neonGreen animate-ping"></span>
+                    تغطية شاملة لجميع محافظات مصر • أسعار مرنة حسب ميزانيتك
+                </div>
+
+                <!-- Main Headline matching poster -->
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6">
+                    <span class="font-tech text-neon-gradient tracking-wide">CELCODA</span>: حلولكم الرقمية
+                    <span class="block mt-2 text-white">الشاملة في <span class="text-neon-gradient neon-glow-text">كل مصر</span></span>
+                </h1>
+
+                <p class="text-slate-300 text-base sm:text-xl leading-relaxed mb-10 max-w-2xl mx-auto">
+                    نصمم ونبرمج منصات إلكترونية وأنظمة إدارة متكاملة (ERP / POS / تعليمي / طبي) لجميع المجالات. نفذ فكرتك بأعلى جودة وسعر يناسب ميزانيتك، مع خيار صيانة وتحديث دوري كل 5 أشهر.
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#order-section" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-neon-gradient text-darkBg font-black text-lg hover:scale-[1.02] transition transform shadow-neon-strong flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-rocket"></i>
+                        ابدأ طلب مشروعك الآن
+                    </a>
+                    <a href="#tracking-section" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-darkCard border border-darkBorder hover:border-neonCyan/60 text-white font-bold text-lg transition flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-magnifying-glass-location text-neonCyan"></i>
+                        تتبع حالة طلبك
+                    </a>
+                </div>
+
+                <!-- Key Highlights Bar -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 pt-10 border-t border-darkBorder/80">
+                    <div class="p-4 rounded-2xl bg-darkCard/60 border border-darkBorder">
+                        <i class="fa-solid fa-map-location-dot text-2xl text-neonCyan mb-2"></i>
+                        <div class="font-bold text-white text-sm sm:text-base">27 محافظة</div>
+                        <div class="text-xs text-slate-400">خدمة عن بُعد ومباشرة</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-darkCard/60 border border-darkBorder">
+                        <i class="fa-solid fa-wallet text-2xl text-neonGreen mb-2"></i>
+                        <div class="font-bold text-white text-sm sm:text-base">ادفع حسب ميزانيتك</div>
+                        <div class="text-xs text-slate-400">باقات مرنة لكل الفئات</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-darkCard/60 border border-darkBorder">
+                        <i class="fa-solid fa-screwdriver-wrench text-2xl text-neonCyan mb-2"></i>
+                        <div class="font-bold text-white text-sm sm:text-base">صيانة كل 5 أشهر</div>
+                        <div class="text-xs text-slate-400">باقة اختيارية مستمرة</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-darkCard/60 border border-darkBorder">
+                        <i class="fa-solid fa-layer-group text-2xl text-neonGreen mb-2"></i>
+                        <div class="font-bold text-white text-sm sm:text-base">جميع المجالات</div>
+                        <div class="text-xs text-slate-400">تعليم • صحة • تجارة • شركات</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. SERVICES & SECTORS SECTION -->
+        <section id="services" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl sm:text-4xl font-black text-white mb-3">منصات وأنظمة متكاملة <span class="text-neon-gradient">لجميع المجالات</span></h2>
+                <p class="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">اختر المجال الذي يناسب نشاطك وسنقوم بتفصيل النظام خصيصاً لاحتياجاتك</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Service 1: Education -->
+                <div onclick="selectServicePreset('منصة تعليمية', 'التعليم')" class="cursor-pointer group p-6 rounded-2xl bg-darkCard border border-darkBorder hover:border-neonCyan transition-all duration-300 hover:-translate-y-1 shadow-lg">
+                    <div class="w-14 h-14 rounded-xl bg-neonCyan/10 border border-neonCyan/30 flex items-center justify-center text-neonCyan text-2xl mb-5 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">المنصات التعليمية</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">منصات للمدرسين والأكاديميات والسناتر، حماية الفيديوهات، امتحانات أونلاين، وتقارير أولياء الأمور.</p>
+                    <span class="text-xs font-bold text-neonCyan flex items-center gap-1 group-hover:gap-2 transition-all">
+                        اطلب هذا النظام <i class="fa-solid fa-arrow-left"></i>
+                    </span>
+                </div>
+
+                <!-- Service 2: Health -->
+                <div onclick="selectServicePreset('سيستم إدارة متكامل', 'الصحة والعيادات')" class="cursor-pointer group p-6 rounded-2xl bg-darkCard border border-darkBorder hover:border-neonGreen transition-all duration-300 hover:-translate-y-1 shadow-lg">
+                    <div class="w-14 h-14 rounded-xl bg-neonGreen/10 border border-neonGreen/30 flex items-center justify-center text-neonGreen text-2xl mb-5 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">الأنظمة الطبية والعيادات</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">إدارة العيادات والمراكز الطبية، حجز المواعيد، ملفات المرضى الإلكترونية، والروشتات والحسابات.</p>
+                    <span class="text-xs font-bold text-neonGreen flex items-center gap-1 group-hover:gap-2 transition-all">
+                        اطلب هذا النظام <i class="fa-solid fa-arrow-left"></i>
+                    </span>
+                </div>
+
+                <!-- Service 3: Commerce & POS -->
+                <div onclick="selectServicePreset('متجر إلكتروني', 'التجارة والمبيعات')" class="cursor-pointer group p-6 rounded-2xl bg-darkCard border border-darkBorder hover:border-neonCyan transition-all duration-300 hover:-translate-y-1 shadow-lg">
+                    <div class="w-14 h-14 rounded-xl bg-neonCyan/10 border border-neonCyan/30 flex items-center justify-center text-neonCyan text-2xl mb-5 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">التجارة والمتاجر والكاشير</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">متاجر إلكترونية متكاملة مع الدفع الإلكتروني، وأنظمة كاشير ومخازن وفواتير للمحلات والشركات.</p>
+                    <span class="text-xs font-bold text-neonCyan flex items-center gap-1 group-hover:gap-2 transition-all">
+                        اطلب هذا النظام <i class="fa-solid fa-arrow-left"></i>
+                    </span>
+                </div>
+
+                <!-- Service 4: Custom Systems & Apps -->
+                <div onclick="selectServicePreset('تطبيق موبايل / موقع مخصص', 'شركات وخدمات')" class="cursor-pointer group p-6 rounded-2xl bg-darkCard border border-darkBorder hover:border-neonGreen transition-all duration-300 hover:-translate-y-1 shadow-lg">
+                    <div class="w-14 h-14 rounded-xl bg-neonGreen/10 border border-neonGreen/30 flex items-center justify-center text-neonGreen text-2xl mb-5 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">برمجة خاصة وتطبيقات</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">مواقع تعريفية للشركات، تطبيقات أندرويد وآيفون، وأنظمة ERP مخصصة لإدارة المطاعم والعقارات والمصانع.</p>
+                    <span class="text-xs font-bold text-neonGreen flex items-center gap-1 group-hover:gap-2 transition-all">
+                        اطلب هذا النظام <i class="fa-solid fa-arrow-left"></i>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. SMART CLIENT ORDER FORM SECTION -->
+        <section id="order-section" class="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+            <div class="rounded-3xl bg-darkCard border border-neonCyan/30 p-6 sm:p-10 shadow-neon relative overflow-hidden">
+                <!-- Decorative Glow -->
+                <div class="absolute -top-24 -left-24 w-64 h-64 bg-neonCyan/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-neonGreen/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="text-center mb-8 relative z-10">
+                    <span class="text-neonCyan text-xs font-bold uppercase tracking-widest">نموذج الطلب الذكي</span>
+                    <h2 class="text-2xl sm:text-4xl font-black text-white mt-1 mb-2">سجل طلب مشروعك الآن</h2>
+                    <p class="text-slate-400 text-sm sm:text-base">حدد تفاصيل مشروعك وميزانيتك، وسيتواصل معك فريق <span class="text-neonCyan font-bold">CELCODA</span> فوراً</p>
+                </div>
+
+                <!-- Order Form -->
+                <form id="celcoda-order-form" onsubmit="handleOrderSubmit(event)" class="space-y-6 relative z-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Client Name -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-200 mb-2">الاسم بالكامل أو اسم النشاط <span class="text-neonCyan">*</span></label>
+                            <div class="relative">
+                                <i class="fa-solid fa-user absolute right-4 top-3.5 text-slate-400"></i>
+                                <input type="text" id="clientName" required placeholder="مثال: د. أحمد محمود / شركة النور" 
+                                    class="w-full pr-11 pl-4 py-3 rounded-xl bg-[#070d14] border border-darkBorder focus:border-neonCyan text-white placeholder-slate-500 outline-none transition">
+                            </div>
+                        </div>
+
+                        <!-- Phone / WhatsApp -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-200 mb-2">رقم الهاتف / واتساب <span class="text-neonCyan">*</span></label>
+                            <div class="relative">
+                                <i class="fa-brands fa-whatsapp absolute right-4 top-3.5 text-neonGreen text-lg"></i>
+                                <input type="tel" id="clientPhone" required placeholder="01xxxxxxxxx" pattern="[0-9+ ]{10,15}"
+                                    class="w-full pr-11 pl-4 py-3 rounded-xl bg-[#070d14] border border-darkBorder focus:border-neonCyan text-white placeholder-slate-500 outline-none transition text-left" dir="ltr">
+                            </div>
+                        </div>
+
+                        <!-- Governorate -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-200 mb-2">المحافظة (تغطية كل مصر) <span class="text-neonCyan">*</span></label>
+                            <div class="relative">
+                                <i class="fa-solid fa-location-dot absolute right-4 top-3.5 text-neonCyan"></i>
+                                <select id="clientGov" required class="w-full pr-11 pl-4 py-3 rounded-xl bg-[#070d14] border border-darkBorder focus:border-neonCyan text-white outline-none transition appearance-none">
+                                    <option value="القاهرة">القاهرة</option>
+                                    <option value="الجيزة">الجيزة</option>
+                                    <option value="الإسكندرية">الإسكندرية</option>
+                                    <option value="الدقهلية">الدقهلية</option>
+                                    <option value="الشرقية">الشرقية</option>
+                                    <option value="المنوفية">المنوفية</option>
+                                    <option value="القليوبية">القليوبية</option>
+                                    <option value="البحيرة">البحيرة</option>
+                                    <option value="الغربية">الغربية</option>
+                                    <option value="كفر الشيخ">كفر الشيخ</option>
+                                    <option value="دمياط">دمياط</option>
+                                    <option value="بورسعيد">بورسعيد</option>
+                                    <option value="الإسماعيلية">الإسماعيلية</option>
+                                    <option value="السويس">السويس</option>
+                                    <option value="الفيوم">الفيوم</option>
+                                    <option value="بني سويف">بني سويف</option>
+                                    <option value="المنيا">المنيا</option>
+                                    <option value="أسيوط">أسيوط</option>
+                                    <option value="سوهاج">سوهاج</option>
+                                    <option value="قنا">قنا</option>
+                                    <option value="الأقصر">الأقصر</option>
+                                    <option value="أسوان">أسوان</option>
+                                    <option value="البحر الأحمر">البحر الأحمر</option>
+                                    <option value="مطروح">مطروح</option>
+                                    <option value="الوادي الجديد">الوادي الجديد</option>
+                                    <option value="شمال سيناء">شمال سيناء</option>
+                                    <option value="جنوب سيناء">جنوب سيناء</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Project Type -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-200 mb-2">نوع النظام المطلوب <span class="text-neonCyan">*</span></label>
+                            <div class="relative">
+                                <i class="fa-solid fa-laptop-code absolute right-4 top-3.5 text-neonCyan"></i>
+                                <select id="projectType" required class="w-full pr-11 pl-4 py-3 rounded-xl bg-[#070d14] border border-darkBorder focus:border-neonCyan text-white outline-none transition appearance-none">
+                                    <option value="منصة تعليمية">منصة تعليمية متكاملة</option>
+                                    <option value="سيستم إدارة متكامل">سيستم إدارة (عيادات / مخازن / ERP / كاشير)</option>
+                                    <option value="متجر إلكتروني">متجر إلكتروني (E-Commerce)</option>
+                                    <option value="موقع إلكتروني تعريفي">موقع إلكتروني تعريفي للشركات</option>
+                                    <option value="تطبيق موبايل / موقع مخصص">تطبيق موبايل (Android & iOS) أو برمجة خاصة</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sector / Field -->
+                    <div>
+                        <label class="block text-sm font-bold text-slate-200 mb-2">مجال النشاط</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5" id="sector-pills">
+                            <button type="button" onclick="selectSector(this, 'التعليم')" class="sector-btn active px-3 py-2.5 rounded-xl border border-neonCyan bg-neonCyan/15 text-neonCyan text-xs font-bold transition">التعليم</button>
+                            <button type="button" onclick="selectSector(this, 'الصحة والعيادات')" class="sector-btn px-3 py-2.5 rounded-xl border border-darkBorder bg-[#070d14] text-slate-300 hover:border-neonCyan/50 text-xs font-bold transition">الصحة والعيادات</button>
+                            <button type="button" onclick="selectSector(this, 'التجارة والمبيعات')" class="sector-btn px-3 py-2.5 rounded-xl border border-darkBorder bg-[#070d14] text-slate-300 hover:border-neonCyan/50 text-xs font-bold transition">التجارة والمبيعات</button>
+                            <button type="button" onclick="selectSector(this, 'المطاعم والكافيهات')" class="sector-btn px-3 py-2.5 rounded-xl border border-darkBorder bg-[#070d14] text-slate-300 hover:border-neonCyan/50 text-xs font-bold transition">المطاعم</button>
+                            <button type="button" onclick="selectSector(this, 'العقارات والمقاولات')" class="sector-btn px-3 py-2.5 rounded-xl border border-darkBorder bg-[#070d14] text-slate-300 hover:border-neonCyan/50 text-xs font-bold transition">العقارات</button>
+                            <button type="button" onclick="selectSector(this, 'مجال آخر')" class="sector-btn px-3 py-2.5 rounded-xl border border-darkBorder bg-[#070d14] text-slate-300 hover:border-neonCyan/50 text-xs font-bold transition">مجال آخر</button>
+                        </div>
+                        <input type="hidden" id="projectSector" value="التعليم">
+                    </div>
+
+                    <!-- Flexible Budget Slider -->
+                    <div class="p-5 rounded-2xl bg-[#070d14] border border-darkBorder">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <label class="text-sm font-bold text-slate-200 flex items-center gap-2">
+                                <i class="fa-solid fa-coins text-neonGreen"></i>
+                                الميزانية التقريبية المناسبة لك:
+                            </label>
+                            <span id="budget-display" class="px-4 py-1 rounded-full bg-neonGreen/15 border border-neonGreen/40 text-neonGreen font-black text-sm sm:text-base">
+                                باقة متوسطة (5,000 - 10,000 ج.م)
+                            </span>
+                        </div>
+                        <input type="range" id="budgetSlider" min="1" max="5" value="2" oninput="updateBudgetLabel(this.value)" class="w-full">
+                        <div class="flex justify-between text-[11px] text-slate-400 mt-2">
+                            <span>اقتصادية (بداية)</span>
+                            <span>متوسطة</span>
+                            <span>احترافية</span>
+                            <span>متقدمة</span>
+                            <span>مشاريع كبرى</span>
+                        </div>
+                    </div>
+
+                    <!-- Optional 5-Month Maintenance Package -->
+                    <label class="flex items-start sm:items-center gap-4 p-4 rounded-2xl bg-[#070d14] border border-darkBorder hover:border-neonCyan/50 cursor-pointer transition">
+                        <input type="checkbox" id="maintenanceCheck" checked class="mt-1 sm:mt-0 w-5 h-5 accent-[#00f2fe] rounded cursor-pointer">
+                        <div class="flex-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="font-bold text-white text-sm sm:text-base">تفعيل باقة الصيانة والتحديث الدوري كل 5 أشهر</span>
+                                <span class="px-2.5 py-0.5 rounded-full bg-neonCyan/15 text-neonCyan text-[11px] font-bold">اختياري</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-0.5">نضمن لك استقرار المنصة، عمل نسخ احتياطية، وتحديثات الأمان والسرعة كل 5 أشهر إذا احتجت ذلك.</p>
+                        </div>
+                    </label>
+
+                    <!-- Project Details -->
+                    <div>
+                        <label class="block text-sm font-bold text-slate-200 mb-2">تفاصيل إضافية عن فكرتك أو متطلباتك</label>
+                        <textarea id="projectDetails" rows="3" placeholder="اكتب أي تفاصيل أو مميزات حابب تكون موجودة في المنصة أو السيستم..."
+                            class="w-full p-4 rounded-xl bg-[#070d14] border border-darkBorder focus:border-neonCyan text-white placeholder-slate-500 outline-none transition"></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full py-4 rounded-2xl bg-neon-gradient text-darkBg font-black text-lg hover:opacity-95 transition shadow-neon-strong flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        إرسال الطلب واستلام كود المتابعة
+                    </button>
+                </form>
+
+                <!-- Order Confirmation Box (Hidden initially, shown upon submission) -->
+                <div id="order-success-box" class="hidden mt-8 p-6 sm:p-8 rounded-2xl bg-[#070d14] border-2 border-neonGreen text-center relative z-10">
+                    <div class="w-16 h-16 rounded-full bg-neonGreen/20 text-neonGreen flex items-center justify-center text-3xl mx-auto mb-4">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-2">تم تسجيل طلبك بنجاح في <span class="font-tech text-neonCyan">CELCODA</span>!</h3>
+                    <p class="text-slate-300 text-sm mb-5">احتفظ بكود التتبع الخاص بك لمتابعة مراحل تنفيذ مشروعك في أي وقت:</p>
+                    
+                    <div class="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-darkCard border border-neonCyan/50 mb-6">
+                        <span id="generated-order-code" class="font-tech text-xl sm:text-2xl font-black text-neon-gradient tracking-wider">CLC-2026-000</span>
+                        <button onclick="copyOrderCode()" class="p-2 rounded-lg bg-neonCyan/15 hover:bg-neonCyan/30 text-neonCyan transition" title="نسخ الكود">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <a id="whatsapp-direct-link" href="#" target="_blank" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-darkBg font-black text-sm flex items-center justify-center gap-2 transition">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                            تأكيد وإرسال التفاصيل واتساب (01280069701)
+                        </a>
+                        <button onclick="trackNewlyCreatedOrder()" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-darkCard border border-neonCyan/40 text-neonCyan font-bold text-sm hover:bg-neonCyan/10 transition">
+                            تتبع الطلب الآن
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. ORDER TRACKING SECTION -->
+        <section id="tracking-section" class="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl sm:text-4xl font-black text-white mb-2">تتبع حالة <span class="text-neon-gradient">مشروعك</span></h2>
+                <p class="text-slate-400 text-sm sm:text-base">أدخل كود الطلب الخاص بك لمعرفة المرحلة الحالية وموعد الصيانة الدورية</p>
+            </div>
+
+            <div class="p-6 sm:p-8 rounded-3xl bg-darkCard border border-darkBorder shadow-xl">
+                <!-- Search Input -->
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-hashtag absolute right-4 top-4 text-neonCyan"></i>
+                        <input type="text" id="trackCodeInput" placeholder="أدخل كود الطلب مثل: CLC-2026-101" 
+                            class="w-full pr-11 pl-4 py-3.5 rounded-xl bg-[#070d14] border border-darkBorder focus:border-neonCyan text-white font-tech tracking-wider uppercase outline-none">
+                    </div>
+                    <button onclick="searchOrder()" class="px-8 py-3.5 rounded-xl bg-neon-gradient text-darkBg font-black hover:opacity-90 transition shadow-neon">
+                        بحث وتتبع
+                    </button>
+                </div>
+
+                <!-- Quick Demo Codes -->
+                <div class="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+                    <span>أكواد تجريبية سريعة:</span>
+                    <button onclick="quickTrack('CLC-2026-101')" class="px-2.5 py-1 rounded-lg bg-[#070d14] border border-darkBorder hover:border-neonCyan text-neonCyan font-tech transition">CLC-2026-101</button>
+                    <button onclick="quickTrack('CLC-2026-102')" class="px-2.5 py-1 rounded-lg bg-[#070d14] border border-darkBorder hover:border-neonCyan text-neonCyan font-tech transition">CLC-2026-102</button>
+                    <button onclick="quickTrack('CLC-2026-103')" class="px-2.5 py-1 rounded-lg bg-[#070d14] border border-darkBorder hover:border-neonCyan text-neonCyan font-tech transition">CLC-2026-103</button>
+                </div>
+
+                <!-- Tracking Result Display -->
+                <div id="tracking-result" class="hidden mt-8 pt-8 border-t border-darkBorder">
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                        <div>
+                            <span id="track-res-code" class="font-tech text-neonCyan font-bold text-lg">CLC-2026-101</span>
+                            <h3 id="track-res-title" class="text-xl font-bold text-white mt-0.5">منصة تعليمية - أ. محمد علي</h3>
+                            <p id="track-res-meta" class="text-xs text-slate-400 mt-1">المحافظة: القاهرة • الميزانية: باقة احترافية</p>
+                        </div>
+                        <div id="track-res-maint-badge" class="px-4 py-2 rounded-xl bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs font-bold">
+                            <i class="fa-solid fa-rotate mr-1"></i> صيانة دورية كل 5 أشهر: مُفعّلة
+                        </div>
+                    </div>
+
+                    <!-- 4-Step Visual Progress Bar -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mt-6" id="tracking-steps-container">
+                        <!-- Rendered dynamically via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: ADMIN DASHBOARD (لوحة تحكم الإدارة)  -->
+    <!-- ========================================== -->
+    <section id="admin-view" class="hidden flex-grow py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-darkBorder">
+            <div>
+                <div class="inline-flex items-center gap-2 text-neonCyan text-xs font-bold mb-1">
+                    <i class="fa-solid fa-lock"></i> نظام إدارة علاقات العملاء والطلبات (CRM)
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-black text-white">لوحة تحكم إدارة <span class="font-tech text-neon-gradient">CELCODA</span></h1>
+            </div>
+            <button onclick="switchView('client')" class="px-5 py-2.5 rounded-xl bg-darkCard border border-darkBorder hover:border-neonCyan text-white text-sm font-bold transition flex items-center gap-2 self-start">
+                <i class="fa-solid fa-arrow-right"></i> العودة لواجهة العملاء
+            </button>
+        </div>
+
+        <!-- Admin KPIs -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+            <div class="p-6 rounded-2xl bg-darkCard border border-darkBorder">
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400 text-sm font-semibold">إجمالي طلبات العملاء</span>
+                    <i class="fa-solid fa-folder-open text-neonCyan text-xl"></i>
+                </div>
+                <div id="stat-total-orders" class="text-3xl font-black text-white mt-2">0</div>
+            </div>
+            <div class="p-6 rounded-2xl bg-darkCard border border-darkBorder">
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400 text-sm font-semibold">مشاريع قيد التنفيذ</span>
+                    <i class="fa-solid fa-code-branch text-amber-400 text-xl"></i>
+                </div>
+                <div id="stat-active-orders" class="text-3xl font-black text-amber-400 mt-2">0</div>
+            </div>
+            <div class="p-6 rounded-2xl bg-darkCard border border-darkBorder">
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400 text-sm font-semibold">مشتركي صيانة الـ 5 أشهر</span>
+                    <i class="fa-solid fa-screwdriver-wrench text-neonGreen text-xl"></i>
+                </div>
+                <div id="stat-maint-orders" class="text-3xl font-black text-neonGreen mt-2">0</div>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="rounded-2xl bg-darkCard border border-darkBorder overflow-hidden shadow-xl">
+            <div class="p-5 border-b border-darkBorder flex flex-wrap items-center justify-between gap-3">
+                <h2 class="font-bold text-lg text-white">الطلبات الواردة من العملاء</h2>
+                <span class="text-xs text-slate-400">يمكنك تحديث حالة أي طلب وسيظهر التحديث للعميل فوراً في صفحة التتبع</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-sm">
+                    <thead class="bg-[#070d14] text-slate-400 border-b border-darkBorder text-xs">
+                        <tr>
+                            <th class="py-4 px-4">كود الطلب</th>
+                            <th class="py-4 px-4">العميل / المحافظة</th>
+                            <th class="py-4 px-4">المشروع والمجال</th>
+                            <th class="py-4 px-4">الميزانية</th>
+                            <th class="py-4 px-4">صيانة 5 شهور</th>
+                            <th class="py-4 px-4">حالة التنفيذ</th>
+                            <th class="py-4 px-4">تواصل</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-orders-tbody" class="divide-y divide-darkBorder/60">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#05090e] border-t border-darkBorder pt-12 pb-8 px-4 sm:px-6 lg:px-8 mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-right">
+            <div>
+                <span class="font-tech text-2xl font-black text-neon-gradient tracking-wider">CELCODA</span>
+                <p class="text-slate-400 text-sm mt-1">حلولكم الرقمية الشاملة في كل مصر • منصات وسيستم لجميع المجالات</p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-4 text-sm font-bold">
+                <a href="https://wa.me/201280069701" target="_blank" class="px-4 py-2 rounded-xl bg-darkCard border border-darkBorder hover:border-neonGreen text-white flex items-center gap-2 transition">
+                    <i class="fa-brands fa-whatsapp text-neonGreen text-lg"></i>
+                    <span dir="ltr">01280069701</span>
+                </a>
+                <a href="https://www.celcoda.eg" target="_blank" class="px-4 py-2 rounded-xl bg-darkCard border border-darkBorder hover:border-neonCyan text-neonCyan flex items-center gap-2 transition">
+                    <i class="fa-solid fa-globe"></i>
+                    <span>www.celcoda.eg</span>
+                </a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-8 pt-6 border-t border-darkBorder/50 text-center text-xs text-slate-500">
+            © 2026 CELCODA Software Solutions. جميع الحقوق محفوظة في جمهورية مصر العربية.
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Company WhatsApp Number
+        const COMPANY_WHATSAPP = "201280069701";
+
+        // Budget Tiers Mapping
+        const BUDGET_TIERS = {
+            "1": "باقة اقتصادية (أقل من 5,000 ج.م)",
+            "2": "باقة متوسطة (5,000 - 10,000 ج.م)",
+            "3": "باقة احترافية (10,000 - 20,000 ج.م)",
+            "4": "باقة متقدمة (20,000 - 35,000 ج.م)",
+            "5": "مشاريع كبرى وأنظمة مؤسسية (+35,000 ج.م)"
+        };
+
+        // Project Status Steps
+        const ORDER_STEPS = [
+            { step: 1, title: "تم استلام الطلب", desc: "وصل طلبك لفريق سيلكودا", icon: "fa-file-circle-check" },
+            { step: 2, title: "دراسة وتحديد السعر", desc: "تحليل المتطلبات وعرض السعر", icon: "fa-calculator" },
+            { step: 3, title: "جاري البرمجة والتطوير", desc: "بناء المنصة واختبارها", icon: "fa-code" },
+            { step: 4, title: "التسليم والتشغيل", desc: "جاهز للعمل بنجاح", icon: "fa-rocket" }
+        ];
+
+        // Default Seed Orders for Demo & Testing
+        const DEFAULT_ORDERS = [
+            {
+                code: "CLC-2026-101",
+                name: "أكاديمية المستقبل التعليمية",
+                phone: "01012345678",
+                gov: "القاهرة",
+                type: "منصة تعليمية",
+                sector: "التعليم",
+                budget: "باقة احترافية (10,000 - 20,000 ج.م)",
+                maintenance: true,
+                details: "منصة كورسات ثانوية عامة مع حماية للفيديو وامتحانات إلكترونية.",
+                statusStep: 3,
+                createdAt: "2026-11-10"
+            },
+            {
+                code: "CLC-2026-102",
+                name: "عيادات الشفاء التخصصية",
+                phone: "01198765432",
+                gov: "الإسكندرية",
+                type: "سيستم إدارة متكامل",
+                sector: "الصحة والعيادات",
+                budget: "باقة متوسطة (5,000 - 10,000 ج.م)",
+                maintenance: true,
+                details: "نظام حجز مواعيد المرضى وملف طبي إلكتروني لكل مريض.",
+                statusStep: 2,
+                createdAt: "2026-11-12"
+            },
+            {
+                code: "CLC-2026-103",
+                name: "متجر مودرن ستايل",
+                phone: "01255544433",
+                gov: "المنصورة - الدقهلية",
+                type: "متجر إلكتروني",
+                sector: "التجارة والمبيعات",
+                budget: "باقة اقتصادية (أقل من 5,000 ج.م)",
+                maintenance: false,
+                details: "متجر ملابس أونلاين مربوط بشركات الشحن.",
+                statusStep: 4,
+                createdAt: "2026-11-05"
+            }
+        ];
+
+        // Load orders from localStorage or initialize with defaults
+        function getOrders() {
+            const stored = localStorage.getItem('celcoda_orders_v1');
+            if (!stored) {
+                localStorage.setItem('celcoda_orders_v1', JSON.stringify(DEFAULT_ORDERS));
+                return DEFAULT_ORDERS;
+            }
+            return JSON.parse(stored);
+        }
+
+        function saveOrders(orders) {
+            localStorage.setItem('celcoda_orders_v1', JSON.stringify(orders));
+        }
+
+        // Custom Toast Notification (No alert())
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const borderColor = type === 'success' ? 'border-neonGreen text-neonGreen' : 'border-neonCyan text-neonCyan';
+            toast.className = `pointer-events-auto px-5 py-3.5 rounded-xl bg-darkCard border ${borderColor} shadow-neon text-sm font-bold flex items-center gap-3 transform transition-all duration-300 translate-y-2 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-info'}"></i><span>${message}</span>`;
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Toggle between Client View and Admin Dashboard
+        let currentView = 'client';
+        function toggleAdminView() {
+            switchView(currentView === 'client' ? 'admin' : 'client');
+        }
+
+        function switchView(view) {
+            currentView = view;
+            const clientView = document.getElementById('client-view');
+            const adminView = document.getElementById('admin-view');
+            const clientNav = document.getElementById('client-nav');
+            const toggleText = document.getElementById('toggle-view-text');
+
+            if (view === 'admin') {
+                clientView.classList.add('hidden');
+                clientNav.classList.add('hidden');
+                adminView.classList.remove('hidden');
+                toggleText.textContent = 'واجهة العميل';
+                renderAdminDashboard();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                adminView.classList.add('hidden');
+                clientView.classList.remove('hidden');
+                clientNav.classList.remove('hidden');
+                toggleText.textContent = 'لوحة الإدارة';
+            }
+        }
+
+        // Preset Service Selection from Cards
+        function selectServicePreset(typeVal, sectorVal) {
+            document.getElementById('projectType').value = typeVal;
+            const pills = document.querySelectorAll('.sector-btn');
+            pills.forEach(btn => {
+                if (btn.textContent.trim() === sectorVal) {
+                    selectSector(btn, sectorVal);
+                }
+            });
+            document.getElementById('order-section').scrollIntoView({ behavior: 'smooth' });
+            showToast(`تم اختيار: ${typeVal} (${sectorVal})`, 'info');
+        }
+
+        // Sector Pill Selection
+        function selectSector(btnElement, sectorName) {
+            document.querySelectorAll('.sector-btn').forEach(btn => {
+                btn.classList.remove('border-neonCyan', 'bg-neonCyan/15', 'text-neonCyan');
+                btn.classList.add('border-darkBorder', 'bg-[#070d14]', 'text-slate-300');
+            });
+            btnElement.classList.remove('border-darkBorder', 'bg-[#070d14]', 'text-slate-300');
+            btnElement.classList.add('border-neonCyan', 'bg-neonCyan/15', 'text-neonCyan');
+            document.getElementById('projectSector').value = sectorName;
+        }
+
+        // Update Budget Display on Slider Change
+        function updateBudgetLabel(val) {
+            document.getElementById('budget-display').textContent = BUDGET_TIERS[val];
+        }
+
+        // Handle Order Form Submission
+        let lastCreatedCode = "";
+        function handleOrderSubmit(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('clientName').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+            const gov = document.getElementById('clientGov').value;
+            const type = document.getElementById('projectType').value;
+            const sector = document.getElementById('projectSector').value;
+            const budgetVal = document.getElementById('budgetSlider').value;
+            const budget = BUDGET_TIERS[budgetVal];
+            const maintenance = document.getElementById('maintenanceCheck').checked;
+            const details = document.getElementById('projectDetails').value.trim() || "لا توجد تفاصيل إضافية";
+
+            // Generate Unique Tracking Code
+            const randomNum = Math.floor(200 + Math.random() * 799);
+            const orderCode = `CLC-2026-${randomNum}`;
+            lastCreatedCode = orderCode;
+
+            const newOrder = {
+                code: orderCode,
+                name,
+                phone,
+                gov,
+                type,
+                sector,
+                budget,
+                maintenance,
+                details,
+                statusStep: 1,
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+
+            const orders = getOrders();
+            orders.unshift(newOrder);
+            saveOrders(orders);
+
+            // Prepare WhatsApp Direct Message
+            const waMessage = `مرحباً شركة CELCODA، أرغب في تأكيد طلب مشروع جديد:%0A` +
+                `🔹 كود الطلب: *${orderCode}*%0A` +
+                `👤 الاسم: ${name}%0A` +
+                `📍 المحافظة: ${gov}%0A` +
+                `💻 نوع النظام: ${type} (${sector})%0A` +
+                `💰 الميزانية: ${budget}%0A` +
+                `🛠️ صيانة كل 5 أشهر: ${maintenance ? 'نعم، مطلوبة' : 'غير مطلوبة'}%0A` +
+                `📝 التفاصيل: ${details}`;
+
+            document.getElementById('generated-order-code').textContent = orderCode;
+            document.getElementById('whatsapp-direct-link').href = `https://wa.me/${COMPANY_WHATSAPP}?text=${waMessage}`;
+            
+            document.getElementById('order-success-box').classList.remove('hidden');
+            document.getElementById('order-success-box').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            showToast('تم إنشاء طلبك وتوليد كود المتابعة بنجاح!');
+            e.target.reset();
+            updateBudgetLabel("2");
+        }
+
+        // Copy Order Code using execCommand for iframe safety
+        function copyOrderCode() {
+            const codeText = document.getElementById('generated-order-code').textContent;
+            const tempInput = document.createElement('input');
+            tempInput.value = codeText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast(`تم نسخ الكود: ${codeText}`);
+        }
+
+        function trackNewlyCreatedOrder() {
+            if (lastCreatedCode) {
+                quickTrack(lastCreatedCode);
+                document.getElementById('tracking-section').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Order Tracking Logic
+        function quickTrack(code) {
+            document.getElementById('trackCodeInput').value = code;
+            searchOrder();
+        }
+
+        function searchOrder() {
+            const inputCode = document.getElementById('trackCodeInput').value.trim().toUpperCase();
+            if (!inputCode) {
+                showToast('من فضلك أدخل كود الطلب أولاً', 'info');
+                return;
+            }
+
+            const orders = getOrders();
+            const found = orders.find(o => o.code.toUpperCase() === inputCode);
+
+            const resultBox = document.getElementById('tracking-result');
+            if (!found) {
+                resultBox.classList.add('hidden');
+                showToast('لم يتم العثور على طلب بهذا الكود، تأكد من كتابته بشكل صحيح', 'info');
+                return;
+            }
+
+            document.getElementById('track-res-code').textContent = found.code;
+            document.getElementById('track-res-title').textContent = `${found.type} - ${found.name}`;
+            document.getElementById('track-res-meta').textContent = `المحافظة: ${found.gov} • المجال: ${found.sector} • ${found.budget}`;
+
+            const maintBadge = document.getElementById('track-res-maint-badge');
+            if (found.maintenance) {
+                maintBadge.className = "px-4 py-2 rounded-xl bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs font-bold";
+                maintBadge.innerHTML = `<i class="fa-solid fa-rotate mr-1"></i> صيانة دورية كل 5 أشهر: مُفعّلة`;
+            } else {
+                maintBadge.className = "px-4 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-400 text-xs font-bold";
+                maintBadge.innerHTML = `<i class="fa-solid fa-ban mr-1"></i> باقة الصيانة الدورية: غير مُفعّلة`;
+            }
+
+            // Render Steps
+            const stepsContainer = document.getElementById('tracking-steps-container');
+            stepsContainer.innerHTML = ORDER_STEPS.map(s => {
+                const isCompleted = s.step <= found.statusStep;
+                const isCurrent = s.step === found.statusStep;
+                return `
+                    <div class="p-4 rounded-2xl border ${isCurrent ? 'border-neonCyan bg-neonCyan/10 shadow-neon' : isCompleted ? 'border-neonGreen/40 bg-neonGreen/5' : 'border-darkBorder bg-[#070d14] opacity-50'} transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${isCompleted ? 'bg-neon-gradient text-darkBg' : 'bg-darkCard text-slate-400'}">
+                                <i class="fa-solid ${s.icon}"></i>
+                            </span>
+                            <span class="text-xs font-tech font-bold ${isCompleted ? 'text-neonGreen' : 'text-slate-500'}">0${s.step}</span>
+                        </div>
+                        <h4 class="font-bold text-white text-sm">${s.title}</h4>
+                        <p class="text-[11px] text-slate-400 mt-1">${s.desc}</p>
+                    </div>
+                `;
+            }).join('');
+
+            resultBox.classList.remove('hidden');
+        }
+
+        // Admin Dashboard Rendering & Status Updating
+        function renderAdminDashboard() {
+            const orders = getOrders();
+            
+            // Update KPIs
+            document.getElementById('stat-total-orders').textContent = orders.length;
+            document.getElementById('stat-active-orders').textContent = orders.filter(o => o.statusStep < 4).length;
+            document.getElementById('stat-maint-orders').textContent = orders.filter(o => o.maintenance).length;
+
+            const tbody = document.getElementById('admin-orders-tbody');
+            tbody.innerHTML = orders.map(order => {
+                const cleanPhone = order.phone.replace(/[^0-9]/g, '');
+                const waUrl = `https://wa.me/2${cleanPhone.startsWith('0') ? cleanPhone : '0' + cleanPhone}?text=${encodeURIComponent(`أهلاً بك يا فندم ${order.name}، معك فريق شركة CELCODA بخصوص طلبك رقم ${order.code}`)}`;
+
+                return `
+                    <tr class="hover:bg-[#070d14]/60 transition">
+                        <td class="py-4 px-4 font-tech font-bold text-neonCyan whitespace-nowrap">${order.code}</td>
+                        <td class="py-4 px-4">
+                            <div class="font-bold text-white">${order.name}</div>
+                            <div class="text-xs text-slate-400">${order.gov} • <span dir="ltr">${order.phone}</span></div>
+                        </td>
+                        <td class="py-4 px-4">
+                            <div class="font-semibold text-slate-200">${order.type}</div>
+                            <div class="text-xs text-neonCyan">${order.sector}</div>
+                        </td>
+                        <td class="py-4 px-4 text-xs text-slate-300">${order.budget}</td>
+                        <td class="py-4 px-4">
+                            ${order.maintenance 
+                                ? '<span class="px-2.5 py-1 rounded-full bg-neonGreen/15 text-neonGreen text-xs font-bold">مطلوبة (كل 5 شهور)</span>' 
+                                : '<span class="px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 text-xs">بدون صيانة</span>'}
+                        </td>
+                        <td class="py-4 px-4">
+                            <select onchange="updateOrderStatus('${order.code}', this.value)" class="px-3 py-1.5 rounded-lg bg-[#070d14] border border-darkBorder focus:border-neonCyan text-xs font-bold text-white outline-none">
+                                <option value="1" ${order.statusStep == 1 ? 'selected' : ''}>1. تم استلام الطلب</option>
+                                <option value="2" ${order.statusStep == 2 ? 'selected' : ''}>2. دراسة وتحديد السعر</option>
+                                <option value="3" ${order.statusStep == 3 ? 'selected' : ''}>3. جاري البرمجة</option>
+                                <option value="4" ${order.statusStep == 4 ? 'selected' : ''}>4. تم التسليم</option>
+                            </select>
+                        </td>
+                        <td class="py-4 px-4">
+                            <a href="${waUrl}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#25D366] text-xs font-bold transition">
+                                <i class="fa-brands fa-whatsapp"></i> واتساب
+                            </a>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateOrderStatus(code, newStep) {
+            const orders = getOrders();
+            const idx = orders.findIndex(o => o.code === code);
+            if (idx !== -1) {
+                orders[idx].statusStep = parseInt(newStep, 10);
+                saveOrders(orders);
+                renderAdminDashboard();
+                showToast(`تم تحديث حالة الطلب ${code} بنجاح`);
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            getOrders();
+        };
+    </script>
+</body>
+</html>
